@@ -1,1 +1,0 @@
-print("Pesan dari Lua")
