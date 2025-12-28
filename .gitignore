@@ -1,0 +1,28 @@
+# bin
+*.exe
+*.out
+*.app
+bin/
+build/
+out/
+
+
+# lib files
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+*.pdb
+
+# VScode
+.vscode/
+.vs/
+*.sln
+*.vcxproj
+*.user
+.idea/
+cmake-build-debug/
+cmake-build-release/
+
+scripts/intruder.jpg

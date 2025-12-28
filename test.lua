@@ -1,0 +1,1 @@
+print("Pesan dari Lua")
