@@ -22,7 +22,9 @@ class LuaEngine {
         void errorReport(int status);
         void setGlobalNumber(const std::string& name, double value);
         void callUpdate(double motionValue);
+        void sendObjectsToLua(const std::vector<cv::Rect>& objects);
         static int lua_getMotion(lua_State* luaNewState);
+        lua_State* getLuaState() {return luaMainState;}
     private :
         lua_State* luaMainState;
         std::filesystem::file_time_type last_writen;

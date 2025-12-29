@@ -56,20 +56,12 @@ double VisionEngineSystem::getMotion(cv::Mat currentFrame) {
         std::vector<std::vector<cv::Point>> contours;
         cv::findContours(thresh, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-        double maxArea = 0;
-        lastDetection = cv::Rect(0, 0, 0, 0);
+        detectObjects.clear();
 
         for (const auto& contour : contours) {
             double area = cv::contourArea(contour);
-            if (area > maxArea && area > 500) {
-                maxArea = area;
-                // lastDetection = cv::boundingRect(contour);
-                cv::Rect rawRect = cv::boundingRect(contour);
-                int padding = 20;
-                lastDetection.x = std::max(0, rawRect.x - padding);
-                lastDetection.y = std::max(0, rawRect.y - padding);
-                lastDetection.width = rawRect.width + (padding * 4);
-                lastDetection.height = rawRect.height + (padding * 4);
+            if (area > 800) {
+                detectObjects.push_back(cv::boundingRect(contour));
             }
         }
 

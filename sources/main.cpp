@@ -29,13 +29,9 @@ int main()
         if (frame.empty()) continue;
         luaEngine.globalFramePointer = &frame;
         double motion = vc.getMotion(frame);
-        cv::Rect box = vc.getLastDetection();
 
-            luaEngine.setGlobalNumber("currennt_motion", motion);
-            luaEngine.setGlobalNumber("detX", box.x);
-            luaEngine.setGlobalNumber("detY", box.y);
-            luaEngine.setGlobalNumber("detW", box.width);
-            luaEngine.setGlobalNumber("detH", box.height);
+        auto objects = vc.getDetectObjects();
+        luaEngine.sendObjectsToLua(objects);
 
         // Lua Function
         luaEngine.callUpdate(motion);

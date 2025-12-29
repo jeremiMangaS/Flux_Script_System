@@ -12,9 +12,11 @@ class VisionEngineSystem {
         bool isWindowOpen();
         void showFrame(const std::string& windowName, cv::Mat frame);
         cv::Mat getNextFrame();
-        cv::Rect getLastDetection() {return  lastDetection;}
+        // cv::Rect getLastDetection() {return  lastDetection;}
+        std::vector<cv::Rect> getDetectObjects() {return detectObjects;}
     private :
         cv::VideoCapture vidCapture;
         cv::Mat previouslyFrame;
-        cv::Rect lastDetection = cv::Rect(0,0,0,0);
+        // cv::Rect lastDetection = cv::Rect(0,0,0,0);
+        std::vector<cv::Rect> detectObjects;
 };

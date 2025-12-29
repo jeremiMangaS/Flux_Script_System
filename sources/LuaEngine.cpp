@@ -98,3 +98,22 @@ int LuaEngine::lua_drawRect(lua_State* luaMainState) {
     }
     return 0;
 }
+
+void LuaEngine::sendObjectsToLua(const std::vector<cv::Rect>& objects) {
+    lua_newtable(luaMainState);
+    for (int i = 0; i < objects.size(); i++) {
+        lua_pushinteger(luaMainState, i + 1);
+        
+        lua_newtable(luaMainState); // x y w h
+            lua_pushinteger(luaMainState, objects[i].x);
+            lua_setfield(luaMainState, -2, "x");
+            lua_pushinteger(luaMainState, objects[i].y);
+            lua_setfield(luaMainState, -2, "y");
+            lua_pushinteger(luaMainState, objects[i].width);
+            lua_setfield(luaMainState, -2, "w");
+            lua_pushinteger(luaMainState, objects[i].height);
+            lua_setfield(luaMainState, -2, "h");
+        lua_settable(luaMainState, -3);
+    }
+    lua_setglobal(luaMainState, "detected_list"); // Lua Variable
+}
