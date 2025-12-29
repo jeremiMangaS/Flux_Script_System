@@ -12,7 +12,9 @@ class VisionEngineSystem {
         bool isWindowOpen();
         void showFrame(const std::string& windowName, cv::Mat frame);
         cv::Mat getNextFrame();
+        cv::Rect getLastDetection() {return  lastDetection;}
     private :
         cv::VideoCapture vidCapture;
         cv::Mat previouslyFrame;
+        cv::Rect lastDetection = cv::Rect(0,0,0,0);
 };

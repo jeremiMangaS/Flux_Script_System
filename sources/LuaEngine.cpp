@@ -5,7 +5,8 @@
 LuaEngine::LuaEngine() {
     luaMainState = luaL_newstate();
     luaL_openlibs(luaMainState);
-    lua_register(luaMainState, "getMotion", lua_getMotion);
+    lua_register(luaMainState, "drawText", lua_drawText);
+    lua_register(luaMainState, "drawRect", lua_drawRect);
     std::cout << "System | Lua Engine initialization\n";
 }
 
@@ -53,4 +54,47 @@ int LuaEngine::lua_getMotion(lua_State* luaNewState) {
 void LuaEngine::setGlobalNumber(const std::string& name, double value) {
     lua_pushnumber(luaMainState, value);
     lua_setglobal(luaMainState, name.c_str());
+}
+
+void LuaEngine::callUpdate(double motionValue) {
+    lua_getglobal(luaMainState, "on_update");
+    if (lua_isfunction(luaMainState, -1)) {
+        lua_pushnumber(luaMainState, motionValue);
+        if (lua_pcall(luaMainState, 1, 0, 0) != LUA_OK) {
+            std::cerr << "System Error | Cannot calling on_update from LUA\nMessage : " << lua_tostring(luaMainState, -1) << std::endl;
+            lua_pop(luaMainState, 1);
+        }
+    } else {
+        lua_pop(luaMainState, 1);
+    }
+}
+
+int LuaEngine::lua_drawText(lua_State* luaMainState) {
+    const char* text = luaL_checkstring(luaMainState, 1);
+    //  x y r g b
+    int x = luaL_checkinteger(luaMainState, 2);
+    int y = luaL_checkinteger(luaMainState, 3);
+    double scale = luaL_checknumber(luaMainState, 4);
+    int r = luaL_checkinteger(luaMainState, 5);
+    int g = luaL_checkinteger(luaMainState, 6);
+    int b = luaL_checkinteger(luaMainState, 7);
+    if (globalFramePointer != nullptr && !globalFramePointer->empty()) {
+        cv::putText(*globalFramePointer, text, cv::Point(x, y), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(b, g, r), 2);
+    }
+    return 0;
+}
+
+int LuaEngine::lua_drawRect(lua_State* luaMainState) {
+    // x y w h r g b
+    int x = luaL_checkinteger(luaMainState, 1);
+    int y = luaL_checkinteger(luaMainState, 2);
+    int w = luaL_checkinteger(luaMainState, 3);
+    int h = luaL_checkinteger(luaMainState, 4);
+    int r = luaL_checkinteger(luaMainState, 5);
+    int g = luaL_checkinteger(luaMainState, 6);
+    int b = luaL_checkinteger(luaMainState, 7);
+    if (globalFramePointer && !globalFramePointer->empty()) {
+        cv::rectangle(*globalFramePointer, cv::Rect(x, y, w, h), cv::Scalar(b, g, r), 2);
+    }
+    return 0;
 }

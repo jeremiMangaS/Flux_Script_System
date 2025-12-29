@@ -26,13 +26,27 @@ int main()
 
     while (vc.isWindowOpen()) {
         cv::Mat frame = vc.getNextFrame();
-
+        if (frame.empty()) continue;
+        luaEngine.globalFramePointer = &frame;
         double motion = vc.getMotion(frame);
+        cv::Rect box = vc.getLastDetection();
+
+            luaEngine.setGlobalNumber("currennt_motion", motion);
+            luaEngine.setGlobalNumber("detX", box.x);
+            luaEngine.setGlobalNumber("detY", box.y);
+            luaEngine.setGlobalNumber("detW", box.width);
+            luaEngine.setGlobalNumber("detH", box.height);
+
+        // Lua Function
+        luaEngine.callUpdate(motion);
+
         luaEngine.setGlobalNumber("current_motion", motion);
         
         luaEngine.reloadChecking(script_path);
 
         vc.showFrame("NexLogic Monitor", frame);
+
+        luaEngine.globalFramePointer = nullptr;
 
         // std::this_thread::sleep_for(std::chrono::milliseconds(500));
 

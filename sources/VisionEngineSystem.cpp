@@ -50,6 +50,28 @@ double VisionEngineSystem::getMotion(cv::Mat currentFrame) {
     // By calculating the difference
     cv::absdiff(previouslyFrame, grayScale, deltaFrame);
     cv::threshold(deltaFrame, thresh, 25, 255, cv::THRESH_BINARY);
+    cv::dilate(thresh, thresh, cv::Mat(), cv::Point(-1, -1), 3);
+
+        // For draw rect
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(thresh, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        double maxArea = 0;
+        lastDetection = cv::Rect(0, 0, 0, 0);
+
+        for (const auto& contour : contours) {
+            double area = cv::contourArea(contour);
+            if (area > maxArea && area > 500) {
+                maxArea = area;
+                // lastDetection = cv::boundingRect(contour);
+                cv::Rect rawRect = cv::boundingRect(contour);
+                int padding = 20;
+                lastDetection.x = std::max(0, rawRect.x - padding);
+                lastDetection.y = std::max(0, rawRect.y - padding);
+                lastDetection.width = rawRect.width + (padding * 4);
+                lastDetection.height = rawRect.height + (padding * 4);
+            }
+        }
 
     double motion = (double)cv::countNonZero(thresh);
 

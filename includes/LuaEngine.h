@@ -2,6 +2,7 @@
 
 #include <string>
 #include <filesystem>
+#include <opencv2/opencv.hpp>
 
 extern "C" {
     #include <lua.h>
@@ -11,12 +12,16 @@ extern "C" {
 
 class LuaEngine {
     public :
+        static inline cv::Mat* globalFramePointer = nullptr;
         LuaEngine();
         ~LuaEngine();
+        static int lua_drawText(lua_State* luaMainState);
+        static int lua_drawRect(lua_State* luaMainState);
         bool loadScript(const std::string& filename);
         void reloadChecking(const std::string& filename);
         void errorReport(int status);
         void setGlobalNumber(const std::string& name, double value);
+        void callUpdate(double motionValue);
         static int lua_getMotion(lua_State* luaNewState);
     private :
         lua_State* luaMainState;
