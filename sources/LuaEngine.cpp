@@ -5,6 +5,7 @@
 LuaEngine::LuaEngine() {
     luaMainState = luaL_newstate();
     luaL_openlibs(luaMainState);
+    lua_register(luaMainState, "getMotion", lua_getMotion);
     std::cout << "System | Lua Engine initialization\n";
 }
 
@@ -41,4 +42,15 @@ void LuaEngine::reloadChecking(const std::string& filename) {
     } catch (std::filesystem::filesystem_error& e) {
         std::cerr << "System error | " << e.what();
     }
+}
+
+// TESTING
+int LuaEngine::lua_getMotion(lua_State* luaNewState) {
+    lua_pushnumber(luaNewState, 100.0); // Push to LUA stack
+    return 1;
+}
+
+void LuaEngine::setGlobalNumber(const std::string& name, double value) {
+    lua_pushnumber(luaMainState, value);
+    lua_setglobal(luaMainState, name.c_str());
 }

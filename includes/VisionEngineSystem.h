@@ -7,10 +7,12 @@ class VisionEngineSystem {
     public : 
         VisionEngineSystem();
         ~VisionEngineSystem();
+        double getMotion(cv::Mat currentFrame);
         bool openCamera(int index = 0);
         bool isWindowOpen();
         void showFrame(const std::string& windowName, cv::Mat frame);
         cv::Mat getNextFrame();
     private :
         cv::VideoCapture vidCapture;
+        cv::Mat previouslyFrame;
 };

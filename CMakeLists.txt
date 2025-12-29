@@ -16,6 +16,9 @@ set(SOURCE_FILES
     sources/VisionEngineSystem.cpp
 )
 
+# exe file
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 add_executable(MyProgram ${SOURCE_FILES})
 # Link OpenCV<->LUA
 target_link_libraries(MyProgram ${OpenCV_LIBS} ${LUA_LIBRARIES})

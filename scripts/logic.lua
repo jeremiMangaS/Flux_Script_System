@@ -1,7 +1,7 @@
 print("Message from LUA")
 
-local a = 5;
-while a < 10 do
-    print(a)
-    a = a + 1
+local motion = current_motion or 0
+
+if motion > 5000 then
+    print("Capture a movement");
 end
