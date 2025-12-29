@@ -14,12 +14,32 @@ print("Message from LUA")
 -- end
 
 
+-- function on_update(motion)
+--     drawText("MULTI OBJEC TESTING", 20, 40, 0.6, 255, 255, 255)
+--     if detected_list then 
+--         for i, obj in ipairs(detected_list) do 
+--             drawRect(obj.x, obj.y, obj.w, obj.h, 255, 0, 0)
+--             drawText("ID : " .. i, obj.x, obj.y - 10, 0.4, 255, 255, 0)
+--         end
+--     end
+-- end
+
+
 function on_update(motion)
-    drawText("MULTI OBJEC TESTING", 20, 40, 0.6, 255, 255, 255)
-    if detected_list then 
+    drawText("FACE RECOGNIZE", 20, 40, 0.6, 255, 255, 255)
+    
+    if detected_list ~= nil then 
         for i, obj in ipairs(detected_list) do 
             drawRect(obj.x, obj.y, obj.w, obj.h, 255, 0, 0)
             drawText("ID : " .. i, obj.x, obj.y - 10, 0.4, 255, 255, 0)
         end
     end
+
+    if face_lists ~= nil then 
+        for i, face in ipairs(face_lists) do 
+            drawRect(face.x, face.y, face.w, face.h, 0, 255, 255)
+            drawText("FACE DETECTED", face.x, face.y - 10, 0.5, 0, 255, 255)
+        end
+    end
+
 end

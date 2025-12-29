@@ -27,16 +27,20 @@ int main()
     while (vc.isWindowOpen()) {
         cv::Mat frame = vc.getNextFrame();
         if (frame.empty()) continue;
-        luaEngine.globalFramePointer = &frame;
-        double motion = vc.getMotion(frame);
 
+        luaEngine.globalFramePointer = &frame;
+
+        double motion = vc.getMotion(frame);
+        vc.detectFaces(frame);
+        auto faces = vc.getDetectedFaces();
         auto objects = vc.getDetectObjects();
-        luaEngine.sendObjectsToLua(objects);
+
+        luaEngine.sendObjectsToLua(objects, "detected_list");
+        luaEngine.sendObjectsToLua(faces, "face_lists");
+        luaEngine.setGlobalNumber("current_motion", motion);
 
         // Lua Function
         luaEngine.callUpdate(motion);
-
-        luaEngine.setGlobalNumber("current_motion", motion);
         
         luaEngine.reloadChecking(script_path);
 

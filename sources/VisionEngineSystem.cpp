@@ -2,6 +2,9 @@
 
 VisionEngineSystem::VisionEngineSystem() {
     std::cout << "System | Vision Engine System Initialization" << std::endl;
+    if (!faceCascade.load("../../resources/haarcascade_frontalface_default.xml")) {
+        std::cerr << "System Error | Cannot opent or find face rcodnize model" << std::endl;
+    }
 }
 
 VisionEngineSystem::~VisionEngineSystem() {
@@ -69,4 +72,12 @@ double VisionEngineSystem::getMotion(cv::Mat currentFrame) {
 
     previouslyFrame = grayScale.clone();
     return motion;
+}
+
+void VisionEngineSystem::detectFaces(cv::Mat frame) {
+    faceObjects.clear();
+    cv::Mat grayScale;
+    cv::cvtColor(frame, grayScale, cv::COLOR_BGR2GRAY);
+    cv::equalizeHist(grayScale, grayScale);
+    faceCascade.detectMultiScale(grayScale, faceObjects, 1.1, 3, 0, cv::Size(30, 30));
 }

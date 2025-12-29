@@ -4,9 +4,12 @@
 #include <iostream>
 
 class VisionEngineSystem {
-    public : 
+    public :
+
+        // Const - Desct
         VisionEngineSystem();
         ~VisionEngineSystem();
+
         double getMotion(cv::Mat currentFrame);
         bool openCamera(int index = 0);
         bool isWindowOpen();
@@ -14,9 +17,19 @@ class VisionEngineSystem {
         cv::Mat getNextFrame();
         // cv::Rect getLastDetection() {return  lastDetection;}
         std::vector<cv::Rect> getDetectObjects() {return detectObjects;}
+
+        // Face Recognize
+        void detectFaces(cv::Mat frame);
+        std::vector<cv::Rect> getDetectedFaces() {return faceObjects;}
+
     private :
+
         cv::VideoCapture vidCapture;
         cv::Mat previouslyFrame;
         // cv::Rect lastDetection = cv::Rect(0,0,0,0);
         std::vector<cv::Rect> detectObjects;
+        
+        // Face Recognize
+        cv::CascadeClassifier faceCascade;
+        std::vector<cv::Rect> faceObjects;
 };
