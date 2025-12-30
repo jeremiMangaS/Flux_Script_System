@@ -7,6 +7,7 @@ LuaEngine::LuaEngine() {
     luaL_openlibs(luaMainState);
     lua_register(luaMainState, "drawText", lua_drawText);
     lua_register(luaMainState, "drawRect", lua_drawRect);
+    lua_register(luaMainState, "saveImg", lua_saveImg);
     std::cout << "System | Lua Engine initialization\n";
 }
 
@@ -116,4 +117,13 @@ void LuaEngine::sendObjectsToLua(const std::vector<cv::Rect>& objects, const std
         lua_settable(luaMainState, -3);
     }
     lua_setglobal(luaMainState, tableName.c_str()); // Lua Variable
+}
+
+int LuaEngine::lua_saveImg(lua_State* luaMainState) {
+    const char* filename = luaL_checkstring(luaMainState, 1);
+    if (globalFramePointer != nullptr && !globalFramePointer->empty()) {
+        cv::imwrite(filename, *globalFramePointer);
+        std::cout << "SYSTEM | Photo taken and saved at : " << filename << std::endl;
+    }
+    return 0;
 }

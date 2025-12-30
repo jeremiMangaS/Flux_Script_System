@@ -30,6 +30,6 @@ class VisionEngineSystem {
         std::vector<cv::Rect> detectObjects;
         
         // Face Recognize
-        cv::CascadeClassifier faceCascade;
+        cv::CascadeClassifier faceCascade, profileCascade, fullBodyCascade, upperBodyCascade;
         std::vector<cv::Rect> faceObjects;
 };

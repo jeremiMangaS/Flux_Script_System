@@ -1,9 +1,14 @@
 #include "../includes/VisionEngineSystem.h"
 
 VisionEngineSystem::VisionEngineSystem() {
+        // MODEL
+        bool faceModel = faceCascade.load("../../resources/haarcascade_frontalface_default.xml");
+        bool profileModel = profileCascade.load("../../resources/haarcascade_profileface.xml");
+        bool fullBodyModel = fullBodyCascade.load("../../resources/haarcascade_fullbody.xml");
+        bool upperBodyModel = upperBodyCascade.load("../../resources/haarcascade_upperbody.xml");
     std::cout << "System | Vision Engine System Initialization" << std::endl;
-    if (!faceCascade.load("../../resources/haarcascade_frontalface_default.xml")) {
-        std::cerr << "System Error | Cannot opent or find face rcodnize model" << std::endl;
+    if (!faceModel && !profileModel && !fullBodyModel && !upperBodyModel) {
+        std::cerr << "System Error | Cannot open or find the model'[s]" << std::endl;
     }
 }
 
@@ -76,8 +81,16 @@ double VisionEngineSystem::getMotion(cv::Mat currentFrame) {
 
 void VisionEngineSystem::detectFaces(cv::Mat frame) {
     faceObjects.clear();
-    cv::Mat grayScale;
-    cv::cvtColor(frame, grayScale, cv::COLOR_BGR2GRAY);
-    cv::equalizeHist(grayScale, grayScale);
-    faceCascade.detectMultiScale(grayScale, faceObjects, 1.1, 3, 0, cv::Size(30, 30));
+        // GRAY SCALING
+        cv::Mat grayScale;
+        cv::cvtColor(frame, grayScale, cv::COLOR_BGR2GRAY);
+        cv::equalizeHist(grayScale, grayScale);
+    
+    std::vector<cv::Rect> front, profile, upperBody, fullBody;
+
+    faceCascade.detectMultiScale(grayScale, front, 1.2, 5, 0, cv::Size(60, 60));
+    profileCascade.detectMultiScale(grayScale, profile, 1.2, 5, 0, cv::Size(60, 60));
+
+    faceObjects.insert(faceObjects.end(), front.begin(), front.end());
+    faceObjects.insert(faceObjects.end(), profile.begin(), profile.end());
 }
