@@ -19,9 +19,11 @@ VisionEngineSystem::~VisionEngineSystem() {
 }
 
 cv::Mat VisionEngineSystem::getNextFrame() {
-    cv::Mat frame;
+    cv::Mat frame, canvas;
     vidCapture >> frame;
-    return frame;
+    if (frame.empty()) return frame;
+    cv::copyMakeBorder(frame, canvas, 0, 0, 0, 200, cv::BORDER_CONSTANT, cv::Scalar(40, 40, 40));
+    return canvas;
 }
 
 void VisionEngineSystem::showFrame(const std::string& windowName, cv::Mat frame) {
